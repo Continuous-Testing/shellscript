@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+
+# copy/modified content 
+# from fnichol workstation repo
+# https://github.com/fnichol/workstation
+
+sudo apt-get update
+
+generate_keys() {
+
+  if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+    info "Generating SSH key for '$USER' on this system"
+    mkdir -p "$HOME/.ssh"
+    ssh-keygen \
+      -N '' \
+      -C "${USER}@$(hostname -f)-$(date +%FT%T%z)" \
+      -t rsa \
+      -b 4096 \
+      -a 100 \
+      -f "$HOME/.ssh/id_rsa"
+    chmod 0700 "$HOME/.ssh"
+    chmod 0600 "$HOME/.ssh/id_rsa"
+    chmod 0644 "$HOME/.ssh/id_rsa.pub"
+  fi
+}
+
+install_pkg() {
+
+ local pkg="$1"
+
+  if dpkg -l "$pkg" > /dev/null 2>&1; then
+    return 0
+  fi
+
+  info "Installing package '$pkg'"
+  sudo apt-get install -y "$pkg" 2>&1
+}
+
+install_pkgs_from_json() {
+
+  local json="$1"
+
+  cat "$json" | jq -r .[] | while read -r pkg; do
+    install_pkg "$pkg"
+  done
+}
+
+
+generate_keys
+install_pkg jq
+install_pkgs_from_json "data/ubuntu_base_pkgs.json"
