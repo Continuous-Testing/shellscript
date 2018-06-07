@@ -38,8 +38,6 @@ install_pkg() {
 
 install_pkgs_from_json() {
 
-  json="$1"
-
   jq -r .[] < data/ubuntu_base_pkgs.json | while read -r pkg; do
     install_pkg "$pkg"
   done
