@@ -3,4 +3,5 @@ language: shell
 sudo: false
 
 script:
-- shellcheck bin/setup
+- shellcheck setup
+- jsonlint data/ubuntu_base_pkgs.json
