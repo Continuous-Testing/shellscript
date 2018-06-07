@@ -26,7 +26,7 @@ generate_keys() {
 
 install_pkg() {
 
- local pkg="$1"
+ pkg="$1"
 
   if dpkg -l "$pkg" > /dev/null 2>&1; then
     return 0
@@ -38,7 +38,7 @@ install_pkg() {
 
 install_pkgs_from_json() {
 
-  local json="$1"
+  json="$1"
 
   cat "$json" | jq -r .[] | while read -r pkg; do
     install_pkg "$pkg"

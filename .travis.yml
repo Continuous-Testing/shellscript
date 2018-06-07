@@ -2,6 +2,9 @@ language: shell
 
 sudo: false
 
+install:
+  - npm install jsonlint
+
 script:
-- shellcheck setup
-- jsonlint data/ubuntu_base_pkgs.json
+  - shellcheck setup
+  - jsonlint data/ubuntu_base_pkgs.json
